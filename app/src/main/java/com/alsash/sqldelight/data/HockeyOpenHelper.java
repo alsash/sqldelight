@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.alsash.sqldelight.table.PlayerModel;
-import com.alsash.sqldelight.table.TeamModel;
+import com.alsash.sqldelight.PlayerModel;
+import com.alsash.sqldelight.TeamModel;
 
 import java.util.GregorianCalendar;
 
@@ -14,15 +14,15 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
 
   private static HockeyOpenHelper instance;
 
+  public HockeyOpenHelper(Context context) {
+    super(context, null, null, DATABASE_VERSION);
+  }
+
   public static HockeyOpenHelper getInstance(Context context) {
     if (instance == null) {
       instance = new HockeyOpenHelper(context);
     }
     return instance;
-  }
-
-  public HockeyOpenHelper(Context context) {
-    super(context, null, null, DATABASE_VERSION);
   }
 
   @Override public void onCreate(SQLiteDatabase db) {

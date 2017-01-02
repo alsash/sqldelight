@@ -1,6 +1,6 @@
 package com.alsash.sqldelight.data;
 
-import com.alsash.sqldelight.table.PlayerModel;
+import com.alsash.sqldelight.PlayerModel;
 import com.google.auto.value.AutoValue;
 import com.squareup.sqldelight.EnumColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
@@ -9,18 +9,16 @@ import java.util.Calendar;
 
 @AutoValue
 public abstract class Player implements PlayerModel {
-    public enum Shoots {
-        RIGHT, LEFT
-    }
-
-    public enum Position {
-        LEFT_WING, RIGHT_WING, CENTER, DEFENSE, GOALIE
-    }
-
+    public static final RowMapper<ForTeam> FOR_TEAM_MAPPER = FACTORY.for_teamMapper(
+            new For_teamCreator<Player, Team, ForTeam>() {
+                @Override
+                public ForTeam create(Player player, Team team) {
+                    return new AutoValue_Player_ForTeam(player, team);
+                }
+            }, Team.FACTORY);
     private static final DateAdapter DATE_ADAPTER = new DateAdapter();
     private static final EnumColumnAdapter<Shoots> SHOOTS_ADAPTER = EnumColumnAdapter.create(Shoots.class);
     private static final EnumColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
-
     public static final Factory<Player> FACTORY = new Factory<>(new Creator<Player>() {
         @Override
         public Player create(long id, String firstName, String lastName, int number, Long team, int age,
@@ -30,13 +28,13 @@ public abstract class Player implements PlayerModel {
         }
     }, DATE_ADAPTER, SHOOTS_ADAPTER, POSITION_ADAPTER);
 
-    public static final RowMapper<ForTeam> FOR_TEAM_MAPPER = FACTORY.for_teamMapper(
-            new For_teamCreator<Player, Team, ForTeam>() {
-                @Override
-                public ForTeam create(Player player, Team team) {
-                    return new AutoValue_Player_ForTeam(player, team);
-                }
-            }, Team.FACTORY);
+    public enum Shoots {
+        RIGHT, LEFT
+    }
+
+    public enum Position {
+        LEFT_WING, RIGHT_WING, CENTER, DEFENSE, GOALIE
+    }
 
     @AutoValue
     public static abstract class ForTeam implements For_teamModel<Player, Team> {
